@@ -16,8 +16,8 @@
 
     <repositories>
         <repository>
-            <id>spigotmc-repo</id>
-            <url>https://spigotmc.org</url>
+            <id>codemc-repo</id>
+            <url>https://codemc.io</url>
         </repository>
     </repositories>
 
@@ -53,3 +53,4 @@
         </plugins>
     </build>
 </project>
+
