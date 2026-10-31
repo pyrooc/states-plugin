@@ -16,7 +16,11 @@
 
     <repositories>
         <repository>
-            <id>spigotmc-repo</id>
+            <id>codemc-repo</id>
+            <url>https://codemc.io</url>
+        </repository>
+        <repository>
+            <id>spigotmc-public</id>
             <url>https://spigotmc.org</url>
         </repository>
     </repositories>
