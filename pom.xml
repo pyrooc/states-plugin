@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.shellcraft</groupId>
-    <artifactId>ShellCraftNations</artifactId>
+    <artifactId>ShellStates</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -16,7 +16,7 @@
 
     <repositories>
         <repository>
-            <id>spigotmc-public</id>
+            <id>spigotmc-repo</id>
             <url>https://spigotmc.org</url>
         </repository>
     </repositories>
