@@ -1,0 +1,10 @@
+name: ShellCraftNations
+version: 1.0
+author: ShellCraft
+main: ru.shellcraft.states.ShellStates
+api-version: 1.20
+commands:
+  nationadmin:
+    description: Выдать патент на создание государства.
+    permission: op
+    permission-message: У вас нет прав!
