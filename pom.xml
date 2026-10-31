@@ -16,10 +16,6 @@
 
     <repositories>
         <repository>
-            <id>codemc-repo</id>
-            <url>https://codemc.io</url>
-        </repository>
-        <repository>
             <id>spigotmc-public</id>
             <url>https://spigotmc.org</url>
         </repository>
@@ -35,10 +31,13 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
                 <directory>src/resources</directory>
-                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
             </resource>
         </resources>
         <plugins>
