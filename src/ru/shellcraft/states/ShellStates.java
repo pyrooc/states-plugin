@@ -24,37 +24,47 @@ import org.bukkit.scoreboard.Team;
 import java.util.*;
 
 public class ShellStates extends JavaPlugin implements Listener, CommandExecutor {
-    private final Map<UUID, String> sessions = new HashMap<>(); // Игрок -> Тип
-    private final Map<UUID, UUID> invites = new HashMap<>(); // Цель -> Лидер
-    private final Map<UUID, String> playerNation = new HashMap<>(); // Игрок -> Фракция
-    private NamespacedKey patentKey; private NamespacedKey mandateKey;
+    private final Map<UUID, String> sessions = new HashMap<>();
+    private final Map<UUID, UUID> invites = new HashMap<>();
+    private final Map<UUID, String> playerNation = new HashMap<>();
+    private NamespacedKey patentKey; 
+    private NamespacedKey mandateKey;
 
     @Override
     public void onEnable() {
         this.patentKey = new NamespacedKey(this, "patent");
         this.mandateKey = new NamespacedKey(this, "mandate");
         Bukkit.getPluginManager().registerEvents(this, this);
-        Objects.requireNonNull(getCommand("nationadmin")).setExecutor(this);
+        if (getCommand("nationadmin") != null) {
+            getCommand("nationadmin").setExecutor(this);
+        }
     }
 
     @Override
     public boolean onCommand(CommandSender s, Command c, String l, String[] a) {
-        if (s instanceof Player && s.isOp()) {
-            ItemStack item = new ItemStack(Material.PAPER); ItemMeta m = item.getItemMeta();
-            if (m != null) {
-                m.setDisplayName(ChatColor.GOLD + "Государственный Патент");
-                m.getPersistentDataContainer().set(patentKey, PersistentDataType.STRING, "true");
-                item.setItemMeta(m);
+        if (s instanceof Player) {
+            Player p = (Player) s;
+            if (p.isOp()) {
+                ItemStack item = new ItemStack(Material.PAPER); 
+                ItemMeta m = item.getItemMeta();
+                if (m != null) {
+                    m.setDisplayName(ChatColor.GOLD + "Государственный Патент");
+                    m.getPersistentDataContainer().set(patentKey, PersistentDataType.STRING, "true");
+                    item.setItemMeta(m);
+                }
+                p.getInventory().addItem(item);
+                p.sendMessage(ChatColor.GREEN + "Вы получили Патент!");
+            } else {
+                p.sendMessage(ChatColor.RED + "У вас нет прав!");
             }
-            ((Player) s).getInventory().addItem(item);
-            s.sendMessage(ChatColor.GREEN + "Вы получили Патент!");
         }
         return true;
     }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        ItemStack i = e.getItem(); if (i == null || i.getItemMeta() == null) return;
+        ItemStack i = e.getItem(); 
+        if (i == null || i.getItemMeta() == null) return;
         if (i.getItemMeta().getPersistentDataContainer().has(patentKey, PersistentDataType.STRING)) {
             e.setCancelled(true);
             Inventory inv = Bukkit.createInventory(null, 9, "Выбор формирования:");
@@ -65,14 +75,20 @@ public class ShellStates extends JavaPlugin implements Listener, CommandExecutor
     }
 
     private ItemStack createItem(Material m, String name) {
-        ItemStack i = new ItemStack(m); ItemMeta meta = i.getItemMeta();
-        if (meta != null) { meta.setDisplayName(name); i.setItemMeta(meta); } return i;
+        ItemStack i = new ItemStack(m); 
+        ItemMeta meta = i.getItemMeta();
+        if (meta != null) { 
+            meta.setDisplayName(name); 
+            i.setItemMeta(meta); 
+        } 
+        return i;
     }
 
     @EventHandler
     public void onMenuClick(InventoryClickEvent e) {
         if (e.getView().getTitle().equals("Выбор формирования:")) {
-            e.setCancelled(true); if (e.getCurrentItem() == null || e.getCurrentItem().getItemMeta() == null) return;
+            e.setCancelled(true); 
+            if (e.getCurrentItem() == null || e.getCurrentItem().getItemMeta() == null) return;
             Player p = (Player) e.getWhoClicked();
             sessions.put(p.getUniqueId(), e.getCurrentItem().getItemMeta().getDisplayName());
             p.closeInventory();
@@ -90,12 +106,14 @@ public class ShellStates extends JavaPlugin implements Listener, CommandExecutor
             sessions.remove(p.getUniqueId());
 
             Scoreboard sb = Bukkit.getScoreboardManager().getMainScoreboard();
-            Team team = sb.getTeam(name); if (team == null) team = sb.registerNewTeam(name);
+            Team team = sb.getTeam(name); 
+            if (team == null) team = sb.registerNewTeam(name);
             team.setColor(ChatColor.GOLD);
             team.setPrefix(ChatColor.GOLD + "[" + name + "] " + ChatColor.RESET);
             team.addEntry(p.getName());
 
-            ItemStack mandate = new ItemStack(Material.NETHER_STAR); ItemMeta m = mandate.getItemMeta();
+            ItemStack mandate = new ItemStack(Material.NETHER_STAR); 
+            ItemMeta m = mandate.getItemMeta();
             if (m != null) {
                 m.setDisplayName(ChatColor.AQUA + "Мандат [" + name + "]");
                 m.getPersistentDataContainer().set(mandateKey, PersistentDataType.STRING, name);
